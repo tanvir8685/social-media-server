@@ -15,11 +15,28 @@ console.log(process.env.DB_User)
 const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster0.ij3fmcd.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
-});
+async function run (){
+    try{
+        const statusCollection=client.db('socialMedia').collection('status');
+        app.get('/allstatus', async (req, res) => {
+            const query = {};
+            const allstatus = await statusCollection.find(query).toArray();
+            res.send(allstatus)
+        });
+        app.post('/allstatus',async(req,res)=>{
+            const allstatus=req.body;
+            const result=await statusCollection.insertOne(allstatus);
+            res.send(result);
+
+        })
+
+    }
+    finally{
+
+    }
+
+}
+run().catch(err=>console.error(err))
 
 
 
