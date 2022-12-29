@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app =express ();
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port =process.env.PORT|| 5000;
 
 app.use(cors());
@@ -18,6 +18,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run (){
     try{
         const statusCollection=client.db('socialMedia').collection('status');
+        const userCollection=client.db('socialMedia').collection('user')
         app.get('/allstatus', async (req, res) => {
             const query = {};
             const allstatus = await statusCollection.find(query).toArray();
@@ -28,7 +29,32 @@ async function run (){
             const result=await statusCollection.insertOne(allstatus);
             res.send(result);
 
-        })
+        });
+        app.get('/alluser',async(req,res)=>{
+            
+            let query={userEmail:req.query.userEmail};
+            // if(req.query.email){
+            //     query={
+            //         userEmail:req.query.userEmail
+            //     }
+                console.log(query)
+            const alluser=await userCollection.findOne(query);
+            res.send(alluser)
+        });
+        app.get('/alluser/:id', async (req, res) => {
+            const id=req.params.id;
+            const query={_id:ObjectId(id)}
+            const alluser = await userCollection.findOne(query);
+            console.log(alluser)
+            res.send(alluser)
+        });
+        app.post('/alluser',async(req,res)=>{
+            const alluser=req.body;
+            const result=await userCollection.insertOne(alluser);
+            res.send(result);
+
+        });
+        
 
     }
     finally{
