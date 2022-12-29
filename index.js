@@ -33,27 +33,36 @@ async function run (){
         app.get('/alluser',async(req,res)=>{
             
             let query={userEmail:req.query.userEmail};
-            // if(req.query.email){
-            //     query={
-            //         userEmail:req.query.userEmail
-            //     }
+
                 console.log(query)
             const alluser=await userCollection.findOne(query);
             res.send(alluser)
         });
-        app.get('/alluser/:id', async (req, res) => {
-            const id=req.params.id;
-            const query={_id:ObjectId(id)}
-            const alluser = await userCollection.findOne(query);
-            console.log(alluser)
-            res.send(alluser)
-        });
+
         app.post('/alluser',async(req,res)=>{
             const alluser=req.body;
             const result=await userCollection.insertOne(alluser);
             res.send(result);
 
         });
+        app.put('/alluser/:id',async(req,res)=>{
+            const id=req.params.id;
+            const filter={_id:ObjectId(id)};
+            const updatedUser=req.body;
+            const option={upsert:true};
+            const newUpdatedUser={
+                $set:{
+                    userName:updatedUser.userName,
+                    userEmail:updatedUser.userEmail,
+                    address:updatedUser.address,
+                    university:updatedUser.university
+                }
+            }
+
+            const result=await userCollection.updateOne(filter,newUpdatedUser,option);
+            res.send(result);
+            console.log(newUpdatedUser)
+        })
         
 
     }
