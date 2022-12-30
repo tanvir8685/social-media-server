@@ -19,6 +19,7 @@ async function run (){
     try{
         const statusCollection=client.db('socialMedia').collection('status');
         const userCollection=client.db('socialMedia').collection('user')
+        const commentCollection=client.db('socialMedia').collection('comment')
         app.get('/allstatus', async (req, res) => {
             const query = {};
             const allstatus = await statusCollection.find(query).toArray();
@@ -33,6 +34,28 @@ async function run (){
         app.post('/allstatus',async(req,res)=>{
             const allstatus=req.body;
             const result=await statusCollection.insertOne(allstatus);
+            res.send(result);
+
+        });
+        // all comment post
+        app.get('/allcomment', async (req, res) => {
+            let query={}            
+           const allComment = await commentCollection.find(query).toArray();
+            res.send(allComment)
+    
+        })
+        app.get('/allcomment/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query={commentId:id}
+            console.log(query)
+            const cursor=commentCollection.find(query);
+            const allcomment=await cursor.toArray();
+            res.send(allcomment)
+        })
+
+        app.post('/allcomment',async(req,res)=>{
+            const allComment=req.body;
+            const result=await commentCollection.insertOne(allComment);
             res.send(result);
 
         });
