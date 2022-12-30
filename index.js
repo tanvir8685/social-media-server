@@ -24,6 +24,12 @@ async function run (){
             const allstatus = await statusCollection.find(query).toArray();
             res.send(allstatus)
         });
+        app.get('/allstatus/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query={_id:ObjectId(id)}
+            const sts=await statusCollection.findOne(query);
+            res.send(sts);
+        });
         app.post('/allstatus',async(req,res)=>{
             const allstatus=req.body;
             const result=await statusCollection.insertOne(allstatus);
@@ -45,15 +51,15 @@ async function run (){
             res.send(result);
 
         });
-        app.put('/alluser/:id',async(req,res)=>{
+        app.patch('/alluser/:id',async(req,res)=>{
             const id=req.params.id;
             const filter={_id:ObjectId(id)};
             const updatedUser=req.body;
             const option={upsert:true};
             const newUpdatedUser={
                 $set:{
-                    userName:updatedUser.userName,
-                    userEmail:updatedUser.userEmail,
+                    // userName:updatedUser.userName,
+                    // userEmail:updatedUser.userEmail,
                     address:updatedUser.address,
                     university:updatedUser.university
                 }
