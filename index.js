@@ -10,11 +10,11 @@ app.use(cors());
 app.use(express.json());
 
 
-console.log(process.env.DB_User)
+// console.log(process.env.DB_User)
 
 
-const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster0.ij3fmcd.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri)
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_Pass}@cluster0.ij3fmcd.mongodb.net/?retryWrites=true&w=majority`;
+// console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 async function run (){
     try{
@@ -48,7 +48,7 @@ async function run (){
         app.get('/allcomment/:id',async(req,res)=>{
             const id=req.params.id;
             const query={commentId:id}
-            console.log(query)
+            // console.log(query)
             const cursor=commentCollection.find(query);
             const allcomment=await cursor.toArray();
             res.send(allcomment)
@@ -64,7 +64,7 @@ async function run (){
             
             let query={userEmail:req.query.userEmail};
 
-                console.log(query)
+                // console.log(query)
             const alluser=await userCollection.findOne(query);
             res.send(alluser)
         });
@@ -112,3 +112,4 @@ app.get('/',(req,res)=>{
 app.listen(port,()=>{
     console.log(`running on ${port}`)
 })
+module.exports = app;
